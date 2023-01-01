@@ -1,5 +1,5 @@
 # sideos-login
-Getting rid of passwords and learn how to do a Passwordless Login with the sideos Wallet. It is using the new SSI Technology to store credentials on a phone for login to a web service. SSI stands for Self-Sovereign-Identity and is all about decentralized data in a web3 world. The example is using (https://sideos.io)[sideos] for a simple start with SSI. 
+Getting rid of passwords and learn how to do a Passwordless Login with the sideos Wallet. It is using the new SSI Technology to store credentials on a phone for login to a web service. SSI stands for Self-Sovereign-Identity and is all about decentralized data in a web3 world. The example is using [sideos](https://sideos.io) for a simple start with SSI. 
 
 The idea behind is to have a credential with some data, e.g. a name or an email address which is signed by the issuer. Because the credential is signed by the issuer and you probably trust the issuer, you can just check the signature of the credential to let someone login. Plus: you can trust all the information provided by the credential because the issuer signed it. As a result, you get passwordless login, one-click onboarding, or no need to store persistantly any data at all (because you get it again with the next login).
 
@@ -28,7 +28,7 @@ The variables ACCESS_TOKEN, SSI_SERVER, LOGIN_TEMPLATE_ID, and DID_ISSUER are se
 The CALLBACK_URL variable is the url of the service and is shown once you start the server, e.g. `Server started at http://pi3p:9000`.
 
 ## Get an sideos Account
-Go to (https://juno.sideos.io/plan-onboarding/1)[sideos onboarding] and: 
+Go to [sideos onboarding](https://juno.sideos.io/plan-onboarding/1) and: 
 1. download the sideos app
 2. create an account at the console by following the instructions
 
