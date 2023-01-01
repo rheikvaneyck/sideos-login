@@ -33,7 +33,7 @@ Go to [sideos onboarding](https://juno.sideos.io/plan-onboarding/1) and:
 2. create an account at the console by following the instructions
 
 ## Create Login Credentials
-Create verifiable credentials which are stored on the users phone and can be verified securely:
+Create verifiable credentials which are stored on the users phone and can be verified securely. sideos is providing a template system to allow creating any possible credential for any possible use case. Templates are based of Credential Data Set which are combining one ore more Proofs. :
 1. In Proofs, add a new proof. Give it a Name, create a new Type, e.g. 'email', and a Context, which is in the case of a simple string 'DataFeedItem'.
 2. In Credentials, create a new template. Create a new Credential type, e.g. 'User' and give it a Name. Chose the proof which is the one we just created. 
 3. Note down the ID of the template we just created. This number goes into the `.env` file mentioned above as LOGIN_TEMPLATE_ID variable. 
@@ -70,4 +70,3 @@ Server started at http://pi3p:9000
 Redis Client connected...
 Redis Client ready
 ``` 
-
