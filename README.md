@@ -23,9 +23,9 @@ LOGIN_TEMPLATE_ID=<template id>
 CALLBACK_URL=<server url>
 DID_ISSUER=<did>
 ```
-The variables ACCESS_TOKEN, SSI_SERVER, LOGIN_TEMPLATE_ID, and DID_ISSUER are set based on information from the sideos account. 
+The values for the variables ACCESS_TOKEN, SSI_SERVER, LOGIN_TEMPLATE_ID, and DID_ISSUER are set based on information from the sideos account as describefd below. 
 
-The CALLBACK_URL variable is the url of the service and is shown once you start the server, e.g. `Server started at http://pi3p:9000`.
+The CALLBACK_URL variable is poiting to the url of the service and is shown once you've started the server, e.g. as `Server started at http://pi3p:9000`.
 
 ## Get an sideos Account
 Go to [sideos onboarding](https://juno.sideos.io/plan-onboarding/1) and: 
@@ -56,7 +56,7 @@ sudo systemctl start redis
 Start the dev service:
 `yarn start:dev`
 
-open the server url shown in the console in your browser:
+Open the server url shown in the console in your browser, in our case `http://pi3p:9000`:
 ```
 pi@pi3p:~/sideos-login $ yarn start:dev
 yarn run v1.22.19
