@@ -1,5 +1,5 @@
 # sideos-login
-Getting rid of passwords and learn how to do a Passwordless Login with the sideos Wallet. It is using the new SSI Technology to store credentials on a phone for login to a web service. SSI stands for Self-Sovereign-Identity and is all about decentralized data in a web3 world. The example is using [sideos](https://sideos.io) for a simple start with SSI. 
+This repo is about getting rid of passwords and learn how to do a Passwordless Login with the sideos Wallet. It is using the new SSI Technology to store credentials on a phone for login to a web service. SSI stands for Self-Sovereign-Identity and is all about decentralized data in a web3 world. The example is using [sideos](https://sideos.io) for a simple start with SSI. 
 
 The idea behind is to have a credential with some data, e.g. a name or an email address which is signed by the issuer. Because the credential is signed by the issuer and you probably trust the issuer, you can just check the signature of the credential to let someone login. Plus: you can trust all the information provided by the credential because the issuer signed it. As a result, you get passwordless login, one-click onboarding, or no need to store persistantly any data at all (because you get it again with the next login).
 
