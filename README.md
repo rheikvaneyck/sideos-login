@@ -4,7 +4,7 @@ This repo is about getting rid of passwords and learn how to do a Passwordless L
 The idea behind is to have a credential with some data, e.g. a name or an email address which is signed by some trustworty issuer. Because the credential is signed and you probably trust the issuer, you can just check the signature of the credential to let someone login. Plus: you can trust all the additional information provided by the credential because the issuer signed it. As a result, you get passwordless login, one-click onboarding, or no need to store persistantly any data at all (because you get it again with the next login). SSI is such a cool concept.
 
 # Installation
-The code is [typescript](https://www.typescriptlang.org/) so you need [node.js](https://nodejs.org/en/) installed on the Raspberry Pi. As a package manager we remommend [yarn](https://yarnpkg.com/). Also, we are using [Redis](https://redis.io/) as session store. Because of the decentralized nature of SSI we don't need a database to store user data. The credential used for the login also includes the data we need for our purpose. 
+The code is [typescript](https://www.typescriptlang.org/) so you need [node.js](https://nodejs.org/en/) installed on the Raspberry Pi. As a package manager we recommend [yarn](https://yarnpkg.com/). Also, we are using [Redis](https://redis.io/) as session store. Because of the decentralized nature of SSI we don't need a database to store user data. The credential used for the login also includes the data we need for our purpose. 
 
 ## Install the Code
 Getting the repository:
