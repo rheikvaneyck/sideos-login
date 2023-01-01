@@ -34,12 +34,12 @@ Go to [sideos onboarding](https://juno.sideos.io/plan-onboarding/1) and:
 
 ## Create Login Credentials
 Create verifiable credentials which are stored on the users phone and can be verified securely:
-1. In Proofs, add a new proof. Give it a Name, create a new Type, e.g. `email`, and a Context, which is in the case of a simple string `DataFeedItem`.
-2. In Credentials, create a new template. Create a new Credential type, e.g. `User` and give it a Name. Chose the proof which is the one we just created. 
+1. In Proofs, add a new proof. Give it a Name, create a new Type, e.g. 'email', and a Context, which is in the case of a simple string 'DataFeedItem'.
+2. In Credentials, create a new template. Create a new Credential type, e.g. 'User' and give it a Name. Chose the proof which is the one we just created. 
 3. Note down the ID of the template we just created. This number goes into the `.env` file mentioned above as LOGIN_TEMPLATE_ID variable. 
 4. In Settings, go to Company Settings and set the Token which goes into the `.env` file mentioned above as ACCESS_TOKEN variable. The value for the DID_ISSUER comes from the Company DID. 
 
 Put the variables up in the `.env` file and: That's it. 
 
 ## Get the Verifiable Credentials
-The credentials can be created by an API call and send in different ways to the user. The easiest way is just to click the button `Test credentials` in the details of a template. It creates a credential which you can store on the phone and for the login later. 
+The credentials can be created by an API call and send in different ways to the user. The easiest way is just to click the button 'Test credentials' in the details of a template. It creates a credential which you can store on the phone and for the login later. 
