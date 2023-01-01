@@ -43,3 +43,31 @@ Put the variables up in the `.env` file and: That's it.
 
 ## Get the Verifiable Credentials
 The credentials can be created by an API call and send in different ways to the user. The easiest way is just to click the button 'Test credentials' in the details of a template. It creates a credential which you can store on the phone and for the login later. 
+
+## Install and run Redis
+The session data is stored in [Redis](https://redis.io/). For development purposes we don't secure redis and assume it only running locally, so we don#t care about exposure sensitive data to the internet. See the Redis documentation to secure the configuration. To install Redis on a Raspberry Pi do 
+```
+sudo apt update
+sudo apt get install redis
+sudo systemctl start redis
+```
+
+# Run it
+Start the dev service:
+`yarn start:dev`
+
+open the server url shown in the console in your browser:
+```
+pi@pi3p:~/sideos-login $ yarn start:dev
+yarn run v1.22.19
+$ nodemon src/index.ts
+[nodemon] 2.0.20
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): src/**/*
+[nodemon] watching extensions: ts,json
+[nodemon] starting `ts-node ./src/index.ts src/index.ts`
+Server started at http://pi3p:9000
+Redis Client connected...
+Redis Client ready
+``` 
+
