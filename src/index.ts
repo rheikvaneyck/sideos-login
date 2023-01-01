@@ -1,4 +1,5 @@
 require('dotenv').config()
+import os from 'os';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import expressWs from 'express-ws';
 import WebSocket from 'ws';
@@ -98,5 +99,5 @@ router.get('/logout', async (req: Request, res: Response, next: NextFunction) =>
 
 app.use('/', router)
 server.listen(port, () => {
-  console.log('Server started at http://localhost:' + port);
+  console.log('Server started at http://' + os.hostname + ':' + port);
 });
