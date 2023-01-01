@@ -45,7 +45,7 @@ Put the variables up in the `.env` file and: That's it.
 The credentials can be created by an API call and send in different ways to the user. The easiest way is just to click the button 'Test credentials' in the details of a template. It creates a credential which you can store on the phone and for the login later. 
 
 ## Install and run Redis
-The session data is stored in [Redis](https://redis.io/). For development purposes we don't secure redis and assume it only running locally, so we don#t care about exposure sensitive data to the internet. See the Redis documentation to secure the configuration. To install Redis on a Raspberry Pi do 
+The session data is stored in [Redis](https://redis.io/). For development purposes we don't secure redis and assume it is only running locally, so we don't care about exposing sensitive data to evil part of the world. Have a look at the Redis documentation to secure your configuration. To install Redis on a Raspberry Pi do:
 ```
 sudo apt update
 sudo apt get install redis
