@@ -35,16 +35,16 @@ Go to [sideos onboarding](https://juno.sideos.io/plan-onboarding/1) and:
 2. create an account at the console by following the instructions
 
 ## Create Login Credentials
-Create verifiable credentials which are stored on the users phone and can be verified securely. sideos is providing a template system to allow creating any possible credential for any possible use case. Templates are based of Credential Data Set which are combining one ore more Proofs. :
-1. In Proofs, add a new proof. Give it a Name, create a new Type, e.g. 'email', and a Context, which is in the case of a simple string 'DataFeedItem'.
-2. In Credentials, create a new template. Create a new Credential type, e.g. 'User' and give it a Name. Chose the proof which is the one we just created. 
-3. Note down the ID of the template we just created. This number goes into the `.env` file mentioned above as LOGIN_TEMPLATE_ID variable. 
-4. In Settings, go to Company Settings and set the Token which goes into the `.env` file mentioned above as ACCESS_TOKEN variable. The value for the DID_ISSUER comes from the Company DID. 
+For SSI login you need to create verifiable credentials which will be stored on the users phone. sideos is providing a template system which allows admins to create credentials for any possible use case. Templates are based of Credential Data Sets which combine one ore more Proofs. :
+1. In _Proofs_, add a new proof. Give it a Name, create a new Type, e.g. 'email', and a Context, which is in the case of a simple string 'DataFeedItem'.
+2. In _Credentials_, create a new template. Create a new _Credential type_, e.g. 'User' and give it a Name. Chose the proof which is the one we just created. 
+3. Note down the _ID_ of the template we just created. This number goes into the `.env` file mentioned above as LOGIN_TEMPLATE_ID variable. 
+4. In _Settings_, go to _Company Settings_ and set the _Token_ which goes into the `.env` file mentioned above as ACCESS_TOKEN variable. The value for the DID_ISSUER comes from the _Company DID_. 
 
-Put the variables up in the `.env` file and: That's it. 
+Put the variables up in the `.env` file.
 
 ## Get the Verifiable Credentials
-The credentials can be created by an API call and send in different ways to the user. The easiest way is just to click the button 'Test credentials' in the details of a template. It creates a credential which you can store on the phone and for the login later. 
+The credentials can be created by an API call and send in different ways to the user. The easiest way is just to click the button 'Test credentials' in the details of a template. It creates a credential which you can store on the phone and for the login later. For the SSI credential part: That's it. 
 
 ## Install and run Redis
 The session data is stored in [Redis](https://redis.io/). For development purposes we don't secure redis and assume it is only running locally, so we don't care about exposing sensitive data to evil part of the world. Have a look at the Redis documentation to secure your configuration. To install Redis on a Raspberry Pi do:
