@@ -9,14 +9,14 @@
       <link href="/stylesheets/style.css" rel="stylesheet" type="text/css" />
       <script src="//cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
       <script>
-        const ws = new WebSocket('ws://pi3p:9000/login');
+        const ws = new WebSocket("<%= callback_url?.replace(/http/,'ws') %>/login");
         ws.onopen = (event) => {
           ws.send('Hello from Login');
         };
         ws.onmessage = (event) => {
           const msg = JSON.parse(event.data)
           if(msg.error === 0) {
-            window.location.replace("http://pi3p:9000/home");
+            window.location.replace("<%= callback_url %>/home");
           } else {
             console.log('error: ', event.data)
           }

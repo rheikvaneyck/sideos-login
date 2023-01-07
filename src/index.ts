@@ -29,7 +29,7 @@ redisClient.on('ready', (err) => console.log('Redis Client ready'));
 
 app.use(session({
   store: new RedisStore({ client: redisClient }),
-  secret: "megagigasecret",
+  secret: process.env.SESSION_SECRET || 'Session Passphrase',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false }
@@ -50,7 +50,7 @@ app.route('/login')
       const url =  process.env.CALLBACK_URL + "/gettoken/" + request.data.challenge
       qr.toDataURL(url, (err, qrcode) => {
         if(err) res.send("Error occured")
-        res.render("login",{qrcode: qrcode});
+        res.render("login",{qrcode: qrcode, callback_url: process.env.CALLBACK_URL});
       })
     }
   });

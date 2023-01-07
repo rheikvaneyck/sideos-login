@@ -89,7 +89,7 @@ export const postLoginConsumeReqest = async (req: Request, res: Response, next: 
     });
     console.log('Trusted DID_ISSUER: ', process.env.DID_ISSUER);
     console.log('email: ', vcs[0].credentialSubject.Email);
-    console.log('Name: ', vcs[0].credentialSubject.Name);
+    console.log('Name: ', vcs[0].credentialSubject.name);
     console.log('did: ', vcs[0].credentialSubject.id);
     console.log('issuer_did: ', vcs[0].issuer.id);
 
@@ -97,7 +97,7 @@ export const postLoginConsumeReqest = async (req: Request, res: Response, next: 
       const did = vcs[0].credentialSubject.id;
       const session_id = await redisClient.v4.get('chid:'+authToken)
       await redisClient.v4.del('chid:'+authToken)
-      await redisClient.set('vc:'+session_id, JSON.stringify({did: did, issuer: vcs[0].issuer.name}))
+      await redisClient.set('vc:'+session_id, JSON.stringify({did: did, name: vcs[0].credentialSubject.name, issuer: vcs[0].issuer.name}))
 
       // here: send VC data relevant for the FE back in the response via websocket
       const ws = getSocket(session_id);   
@@ -108,7 +108,7 @@ export const postLoginConsumeReqest = async (req: Request, res: Response, next: 
           authToken: authToken,
           did: did,
           email: vcs[0].credentialSubject.Email,
-          name: vcs[0].credentialSubject.Name,
+          name: vcs[0].credentialSubject.name,
           role: vcs[0].credentialSubject.Role,
         })) 
       }        
