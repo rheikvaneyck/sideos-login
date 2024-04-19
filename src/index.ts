@@ -9,7 +9,14 @@ import { createClient } from 'redis';
 import connectRedis from 'connect-redis';
 import session from 'express-session';
 import qr from 'qrcode';
-import { getLoginCreateReqest, getLoginVcToken, postLoginConsumeReqest } from './ssi_auth'
+import { v4 as uuidv4 } from 'uuid';
+import { 
+  getLoginCreateReqest, 
+  getLoginVcToken,
+  postLoginConsumeReqest,
+  getCredentialOffer,
+  postConsumeCredentialOffer,
+} from './ssi_auth'
 import { setSocket } from './sockets'
 
 const app = express()
@@ -47,10 +54,11 @@ app.route('/login')
     if(request.data.challenge && request.data.jwt) {
       await redisClient.set('chjwt:'+request.data.challenge, request.data.jwt)
       await redisClient.set('chid:'+request.data.challenge, req.session.id)
+      console.log('login session:',req.session.id)
       const url =  process.env.CALLBACK_URL + "/gettoken/" + request.data.challenge
       qr.toDataURL(url, (err, qrcode) => {
         if(err) res.send("Error occured")
-        res.render("login",{qrcode: qrcode, callback_url: process.env.CALLBACK_URL});
+        res.render("login",{socket_id: req.session.id, qrcode: qrcode, callback_url: process.env.CALLBACK_URL});
       })
     }
   });
@@ -59,15 +67,48 @@ app.route('/login/:token?')
   .post(postLoginConsumeReqest);
 
 (app as unknown as expressWs.Application).ws('/login', (ws: WebSocket, req: Request) => {
-    ws.on('message', (msg: string) => {
+    ws.on('message', async (msg: string) => {
       console.log(msg);
+      if(msg.split(':')[0]== "session") {
+        // Link login session with web socket session
+        await redisClient.set(msg, req.session.id)
+      }
     });
     console.log('socket', req.session.id);
     setSocket(req.session.id, ws)
-})
+});
+
+(app as unknown as expressWs.Application).ws('/issue', (ws: WebSocket, req: Request) => {
+  ws.on('message', async (msg: string) => {
+    console.log(msg);
+    if(msg.split(':')[0]== "session") {
+      // Link login session with web socket session
+      await redisClient.set(msg, req.session.id)
+    }
+  });
+  console.log('socket', req.session.id);
+  setSocket(req.session.id, ws)
+});
 
 app.route('/gettoken/:token?')
   .get(getLoginVcToken);
+
+app.route('/issue')
+.get(async (req: Request,res: Response) => {
+  const request = await getCredentialOffer()
+  if(request.data.challenge && request.data.jwt) {
+    await redisClient.set('chjwt:'+request.data.challenge, request.data.jwt)
+    await redisClient.set('chid:'+request.data.challenge, req.session.id)
+    const url =  process.env.CALLBACK_URL + "/gettoken/" + request.data.challenge
+    qr.toDataURL(url, (err, qrcode) => {
+      if(err) res.send("Error occured")
+      res.render("issue",{socket_id: req.session.id, qrcode: qrcode, callback_url: process.env.CALLBACK_URL});
+    })
+  }
+});
+
+app.route('/issue/:token?')
+  .post(postConsumeCredentialOffer);
 
 app.use(async function(req: Request,res: Response, next: NextFunction) {
   const user_id = await redisClient.v4.get('vc:'+req.session.id, (err: any, data: any) => { console.log('found:',data) })

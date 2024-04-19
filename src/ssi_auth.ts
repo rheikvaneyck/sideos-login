@@ -4,6 +4,7 @@ import axios, { AxiosResponse } from 'axios';
 import { createClient } from 'redis';
 import { getSocket } from './sockets'
 import { v4 as uuidv4 } from 'uuid';
+import { decodeJwt } from 'jose';
 
 export const getLoginCreateReqest = async () => {  
     const challenge = uuidv4();   
@@ -96,11 +97,12 @@ export const postLoginConsumeReqest = async (req: Request, res: Response, next: 
     if(vcs[0].issuer.id === process.env.DID_ISSUER && vcs[0].credentialSubject.id) {
       const did = vcs[0].credentialSubject.id;
       const session_id = await redisClient.v4.get('chid:'+authToken)
+      const socket_id = await redisClient.v4.get('session:'+session_id)
       await redisClient.v4.del('chid:'+authToken)
       await redisClient.set('vc:'+session_id, JSON.stringify({did: did, name: vcs[0].credentialSubject.name, issuer: vcs[0].issuer.name}))
-
+      console.log(socket_id)
       // here: send VC data relevant for the FE back in the response via websocket
-      const ws = getSocket(session_id);   
+      const ws = getSocket(socket_id);   
       if(ws) {
         console.log('Socket found for ', session_id)
         ws.send(JSON.stringify({
@@ -120,6 +122,103 @@ export const postLoginConsumeReqest = async (req: Request, res: Response, next: 
       }
     })
   } catch (err) {
+    return res.status(403).send('Access denied, invalid VC')
+  }
+}
+
+export const getCredentialOffer = async () => {  
+  const challenge = uuidv4();   
+  try {
+    const response = await axios.post(process.env.SSI_SERVER + '/v3/createoffervc',
+    {
+      templateid: process.env.LOGIN_TEMPLATE_ID,
+      dataset: {
+        Email: "user.name@example.com",
+        name: "Anton Mustermann",
+        Role: "User"
+      },
+      domain: process.env.CALLBACK_URL + '/issue',
+      challenge: challenge
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Token': process.env.ACCESS_TOKEN
+      }
+    });
+    return { 
+      data: {
+        error: 0,
+        challenge: challenge,
+        jwt: response.data.data.jwt
+      }
+    }
+  } catch (err) {
+    console.log(`Error posting juno at ${process.env.SSI_SERVER}/v3/createoffervc`);
+    console.log(err);
+    return {
+      data: {
+        error: `Error posting juno at ${process.env.SSI_SERVER}/v3/createoffervc`
+      }
+    }  
+  }
+}
+
+export const postConsumeCredentialOffer = async (req: Request, res: Response, next: NextFunction) => {
+  const redisClient = createClient({ legacyMode: true })
+  await redisClient.connect().catch(console.error)
+  
+  try {
+    const jwt = req.body.jwt;
+    let authToken: string = req.params.token;
+    if (!authToken && req.query.challenge) {
+      authToken = <string>req.query.challenge
+    }
+    console.log('Consume Offer challenge parameter:', authToken)
+    let vcs: Array<any> = [];
+    const response = await axios.post(process.env.SSI_SERVER + '/v3/consumeoffer', {
+      template: process.env.TEMPLATE_ID,
+      token: jwt
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Token': process.env.ACCESS_TOKEN
+      }
+    })
+    const res_jwt = response.data.data.jwt
+    const decoded: any = decodeJwt(res_jwt);
+    decoded.verifiableCredential.forEach((element: any) => {
+      vcs.push(element)
+    });
+    console.log('Trusted DID_ISSUER: ', process.env.DID_ISSUER);
+    console.log('email: ', vcs[0].credentialSubject.Email);
+    console.log('Name: ', vcs[0].credentialSubject.name);
+    console.log('did: ', vcs[0].credentialSubject.id);
+    console.log('issuer_did: ', vcs[0].issuer.id);
+
+    if(vcs[0].issuer.id === process.env.DID_ISSUER && vcs[0].credentialSubject.id) {
+      const did = vcs[0].credentialSubject.id;
+      const session_id = await redisClient.v4.get('chid:'+authToken)
+      await redisClient.v4.del('chid:'+authToken)
+      await redisClient.set('user:' + did, JSON.stringify({did: did, name: vcs[0].credentialSubject.name, issuer: vcs[0].issuer.name}))
+      console.log(session_id)
+      // here: send VC data relevant for the FE back in the response via websocket
+      const ws = getSocket(session_id);   
+      if(ws) {
+        console.log('Socket found for ', session_id)
+        ws.send(JSON.stringify({
+          error: 0,
+          registrationComplete: true,
+          did: did,
+          email: vcs[0].credentialSubject.Email,
+          name: vcs[0].credentialSubject.name,
+          role: vcs[0].credentialSubject.Role,
+        })) 
+      }        
+    }
+    return res.status(200).json(response.data)
+  } catch (err) {
+    console.log(err)
     return res.status(403).send('Access denied, invalid VC')
   }
 }

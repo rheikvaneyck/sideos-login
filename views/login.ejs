@@ -11,7 +11,7 @@
       <script>
         const ws = new WebSocket("<%= callback_url?.replace(/http/,'ws') %>/login");
         ws.onopen = (event) => {
-          ws.send('Hello from Login');
+          ws.send("session:<%= socket_id %>");
         };
         ws.onmessage = (event) => {
           const msg = JSON.parse(event.data)
@@ -64,7 +64,7 @@
       </div>
       <footer>
           <div class="mui-container mui--text-center">
-            Made with ♥ by <a href="https://www.muicss.com">MUICSS</a> and <a href="https://sideos,io">sideos</a>
+            Made with ♥ by <a href="https://www.muicss.com">MUICSS</a> and <a href="https://sideos.io">sideos</a>
           </div>
       </footer>
     </body>

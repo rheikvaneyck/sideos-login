@@ -8,6 +8,20 @@
       <link href="//cdn.muicss.com/mui-0.10.3/css/mui.min.css" rel="stylesheet" type="text/css" />
       <link href="/stylesheets/style.css" rel="stylesheet" type="text/css" />
       <script src="//cdn.muicss.com/mui-0.10.3/js/mui.min.js"></script>
+      <script>
+        const ws = new WebSocket("<%= callback_url?.replace(/http/,'ws') %>/issue");
+        ws.onopen = (event) => {
+          ws.send("session:<%= socket_id %>");
+        };
+        ws.onmessage = (event) => {
+          const msg = JSON.parse(event.data)
+          if(msg.error === 0) {
+            window.location.replace("<%= callback_url %>/login");
+          } else {
+            console.log('error: ', event.data)
+          }
+        }
+      </script>
     </head>
     <body>
       <header class="mui-appbar mui--z1">
@@ -18,7 +32,7 @@
                 <td class="mui--text-right">
                   <ul class="mui-list--inline mui--text-body2">
                     <li><a href="#">About</a></li>
-                    <li><a href="/logout">Logout</a></li>
+                    <li><a href="#">Login</a></li>
                   </ul>
                 </td>
               </tr>
@@ -29,7 +43,7 @@
         <div class="mui--appbar-height"></div>
           <br>
           <br>
-          <div class="mui--text-display3">sideos Login Example</div>
+          <div class="mui--text-display3">Get a Login Credential</div>
           <br>
           <br>
           <div class="mui-container">
@@ -37,9 +51,11 @@
               <div class="mui-col-md-4"></div>
               <div class="mui-col-md-4">
                 <div class="mui-panel">
-                  <p>Hello <%= vc.name %></p>
-                  <p>verified by <%= vc.issuer %></p>
-                  <button class="mui-btn mui-btn--primary">Getting Started</button>
+                  Scan the QR Code to get it
+                  <br>
+                  <form method="post" action="/issue">
+                    <img src=<%= qrcode %> alt="QR Code" >
+                  </form>
                 </div>
               </div>
               <div class="mui-col-md-4"></div>
@@ -48,7 +64,7 @@
       </div>
       <footer>
           <div class="mui-container mui--text-center">
-            Made with ♥ by <a href="https://www.muicss.com">MUICSS</a> and <a href="https://sideos.io">sideos</a>
+            Made with ♥ by <a href="https://www.muicss.com">MUICSS</a> and <a href="https://sideos,io">sideos</a>
           </div>
       </footer>
     </body>
